@@ -83,7 +83,7 @@ const createOrder = async (req, res) => {
         const sendOrderConfirmationEmail1 = async (toEmail) => {
             // Tạo nội dung email với bảng sản phẩm
             const mailOptions = {
-                from: 'Khắc Tú',
+                from: ' Admin',
                 to: toEmail,
                 subject: 'Xác nhận đơn hàng của bạn.',
                 html: `
@@ -120,7 +120,7 @@ const createOrder = async (req, res) => {
                             <p><strong>Địa chỉ nhận hàng:</strong> <span style="color: #34495e; font-style: italic;">${address}</span></p>
                             <br/>
                                                                                    
-                            <p style="text-align: center; font-size: 16px;">Bạn có thể theo dõi đơn hàng tại <a href="https://shopbandodientu.dokhactu.site" style="color: #3498db; text-decoration: none;">WebShop Khắc Tú</a></p>
+                            <p style="text-align: center; font-size: 16px;">Bạn có thể theo dõi đơn hàng tại <a href="https://shopbandodientu.dokhactu.site" style="color: #3498db; text-decoration: none;">WebShop  Admin</a></p>
                         </div>
                     `
             };
@@ -139,7 +139,7 @@ const createOrder = async (req, res) => {
         const sendOrderConfirmationEmail = async (toEmail) => {
             // Tạo nội dung email với bảng sản phẩm
             const mailOptions = {
-                from: 'Khắc Tú',
+                from: ' Admin',
                 to: toEmail,
                 subject: '🎉 Xác nhận đơn hàng của bạn! 🎉',
                 html: `
@@ -176,7 +176,7 @@ const createOrder = async (req, res) => {
                         <p><strong>🏠 Địa chỉ nhận hàng:</strong> <span style="color: #34495e; font-style: italic;">${address}</span></p>
                         <br/>
                                                                
-                        <p style="text-align: center; font-size: 16px;">📦 Bạn có thể theo dõi đơn hàng tại <a href="#" style="color: #3498db; text-decoration: none; font-weight: bold;">WebShop Khắc Tú</a></p>
+                        <p style="text-align: center; font-size: 16px;">📦 Bạn có thể theo dõi đơn hàng tại <a href="#" style="color: #3498db; text-decoration: none; font-weight: bold;">WebShop  Admin</a></p>
                     </div>
                 `
             };
@@ -286,9 +286,23 @@ const createOrder = async (req, res) => {
             }
         }
 
+        // Hàm tạo mã ngẫu nhiên
+        function generateRandomCode(length = 8) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Chữ cái viết hoa và số
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                result += characters[randomIndex];
+            }
+            return result;
+        }
+
+        let mangaunhien = generateRandomCode(6)
         // Tạo đơn hàng mới
         const newOrder = new Order({
-            lastName, firstName, email, address, phone, note, products, soTienGiamGia, giamGia, soTienCanThanhToan, thanhTien, tongSoLuong, idKhachHang: idKhachHang || null
+            lastName, firstName, email, address, phone, note, 
+            products, soTienGiamGia, giamGia, soTienCanThanhToan, thanhTien, tongSoLuong, idKhachHang: idKhachHang || null,
+            maDHRandom: mangaunhien // Tạo mã đơn hàng ngẫu nhiên
         });
 
         // Lưu đơn hàng vào database
@@ -342,7 +356,7 @@ const createOrder = async (req, res) => {
                     await productData.save();
                 }
             } else {
-                console.log(`Product not found: ${productId}`);
+                console.log(`Product not found: ${ _idSP}`);
             }
         }
 
@@ -351,6 +365,7 @@ const createOrder = async (req, res) => {
             message: 'Đặt hàng thành công!',
             data: newOrder,  
             _idDH:  newOrder._id,
+            mangaunhien:  mangaunhien,
             soTienCanThanhToan: newOrder.soTienCanThanhToan,    
         });
     } catch (error) {
@@ -431,7 +446,7 @@ const createOrderThanhToanVNPay = async (req, res) => {
         const sendOrderConfirmationEmail = async (toEmail) => {
             // Tạo nội dung email với bảng sản phẩm
             const mailOptions = {
-                from: 'Khắc Tú',
+                from: ' Admin',
                 to: toEmail,
                 subject: 'Xác nhận đơn hàng của bạn.',
                 html: `
@@ -468,7 +483,7 @@ const createOrderThanhToanVNPay = async (req, res) => {
                             <p><strong>Địa chỉ nhận hàng:</strong> <span style="color: #34495e; font-style: italic;">${address}</span></p>
                             <br/>
                                                                                    
-                            <p style="text-align: center; font-size: 16px;">Bạn có thể theo dõi đơn hàng tại <a href="https://shopbandodientu.dokhactu.site" style="color: #3498db; text-decoration: none;">WebShop Khắc Tú</a></p>
+                            <p style="text-align: center; font-size: 16px;">Bạn có thể theo dõi đơn hàng tại <a href="https://shopbandodientu.dokhactu.site" style="color: #3498db; text-decoration: none;">WebShop  Admin</a></p>
                         </div>
                     `
             };
@@ -589,7 +604,7 @@ const createOrderThanhToanVNPay = async (req, res) => {
                     await productData.save();
                 }
             } else {
-                console.log(`Product not found: ${productId}`);
+                console.log(`Product not found: ${ _idSP}`);
             }
         }
 
@@ -660,7 +675,7 @@ const updateCongTienKhiNap = async (req, res) => {
                 description: sePayWebhookData.description,
                 transferAmount: sePayWebhookData.transferAmount,
                 referenceCode: sePayWebhookData.referenceCode,
-            });
+            });            
 
             // const matchContent = sePayWebhookData.content.match(/dh([a-f0-9]{24})/);
             const matchContent = sePayWebhookData.content.match(/DH([a-zA-Z0-9]{6,30})/);
@@ -669,7 +684,9 @@ const updateCongTienKhiNap = async (req, res) => {
             console.log("idOrder: ", idOrder);           
             
             // Tìm đơn hàng trong database
-            const order = await Order.findById(idOrder).session(session);
+            const order = await Order.findOne({ 
+                maDHRandom: new RegExp(`^${idOrder}$`, "i")
+             }).session(session);
             if (!order) {
                 res.status(404).json({ message: "Không tìm thấy đơn hàng." });
             }
@@ -681,7 +698,8 @@ const updateCongTienKhiNap = async (req, res) => {
             
             const updatedUser = await Order.findOneAndUpdate(
                 // { _id: idOrder },
-                { _id: idOrder },
+                // { maDHRandom: idOrder },
+                { maDHRandom: new RegExp(`^${idOrder}$`, "i") }, // i là flag để không phân biệt hoa thường
                 {
                     $set: { TinhTrangThanhToan: "Đã Thanh Toán" },
                     $push: {

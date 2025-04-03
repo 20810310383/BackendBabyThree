@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema(
     {
         lastName: { type: String,  },
         firstName: { type: String,  },
-        fullName: { type: String,  },
+        maDHRandom: { type: String,  },
         email: { type: String, required: true },
         address: { type: String, required: true },
         phone: { type: String, required: true },
