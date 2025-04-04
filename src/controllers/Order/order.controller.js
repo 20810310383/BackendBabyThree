@@ -693,7 +693,7 @@ const updateCongTienKhiNap = async (req, res) => {
 
             // Kiểm tra số tiền thanh toán có khớp với số tiền cần thanh toán không
             if (Math.round(order.soTienCanThanhToan) !== sePayWebhookData.transferAmount) {
-                res.status(404).json({ message: "Số tiền thanh toán không khớp" });
+                return res.status(404).json({ message: "Số tiền thanh toán không khớp" });
             }
             
             const updatedUser = await Order.findOneAndUpdate(
@@ -719,6 +719,89 @@ const updateCongTienKhiNap = async (req, res) => {
                     .status(404)
                     .json({ message: "User account not found" });
             }
+
+            // Gửi email thông báo
+            const emailContent = `
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo thanh toán thành công</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #28a745;
+            text-align: center;
+        }
+        .order-info {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+        .order-info p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .order-info .amount {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .icon {
+            font-size: 30px;
+            color: #28a745;
+            margin-right: 10px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #777;
+            text-align: center;
+        }
+        .highlight {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><span class="icon">✔️</span> Thanh toán thành công</h2>
+        <p>Kính gửi quý khách,</p>
+        <p>Chúng tôi vui mừng thông báo rằng thanh toán cho đơn hàng <strong>${order.maDHRandom}</strong> đã được xác nhận thành công.</p>
+        
+        <div class="order-info">
+            <p><strong>Số tiền thanh toán:</strong> <span class="amount">${sePayWebhookData.transferAmount} VND</span></p>
+            <p><strong>Trạng thái thanh toán:</strong> <span class="highlight">Đã Thanh Toán</span></p>
+        </div>
+        
+        <div class="footer">
+            <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
+            <p><strong>Đội ngũ hỗ trợ khách hàng</strong></p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
+            await sendEmail(order.email, 'Thông báo thanh toán thành công', emailContent);
+
+
             await session.commitTransaction();
 
             return res.status(200).json({
@@ -737,5 +820,27 @@ const updateCongTienKhiNap = async (req, res) => {
         session.endSession();
     }
 };
+
+// Cấu hình nodemailer (Sử dụng Gmail ví dụ)
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+    }
+});
+
+// Hàm gửi email
+const sendEmail = (to, subject, text) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: to,
+        subject: subject,
+        html: text,
+    };
+
+    return transporter.sendMail(mailOptions);
+};
+
 
 module.exports = { createOrder, createOrderThanhToanVNPay, updateCongTienKhiNap, findOrderById };

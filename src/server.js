@@ -34,7 +34,9 @@ connectDB();
 const allowedOrigins = [
     'http://localhost:3019', // Local development - admin
     'http://localhost:3020', // Local development
-    'https://frontend-trang-chu-baby-three.vercel.app'
+    'https://frontend-trang-chu-baby-three.vercel.app',
+    'https://blindboxmibia.com',
+    'https://pageadmin.blindboxmibia.com'
 ];
 
 app.use(cors({
