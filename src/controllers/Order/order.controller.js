@@ -692,7 +692,7 @@ const updateCongTienKhiNap = async (req, res) => {
             }
 
             // Kiểm tra số tiền thanh toán có khớp với số tiền cần thanh toán không
-            if (order.soTienCanThanhToan !== sePayWebhookData.transferAmount) {
+            if (Math.round(order.soTienCanThanhToan) !== sePayWebhookData.transferAmount) {
                 res.status(404).json({ message: "Số tiền thanh toán không khớp" });
             }
             
