@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const xlsx = require('xlsx');
 const { uploadFile, uploadFiles, uploadExcelFile } = require('../controllers/Upload/upload.controller');
+const { uploadFilee } = require('../controllers/Upload/upload.controller copy');
 // import uploadFile, { uploadExcel, uploadExcelFile } from '../controllers/Upload/upload.controller';
 const router = express.Router();
 
