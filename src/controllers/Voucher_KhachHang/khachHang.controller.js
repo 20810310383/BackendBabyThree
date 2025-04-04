@@ -305,7 +305,7 @@ module.exports = {
     
             if (!user) {
                 return res.status(404).json({
-                    message: "Người dùng không tồn tại.",
+                    message: "Người dùng không tồn tại. Bạn cần đăng nhập để có thể lưu mã giảm giá!",
                     errCode: -1,
                 });
             }
