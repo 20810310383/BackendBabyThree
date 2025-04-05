@@ -312,7 +312,7 @@ const createOrder = async (req, res) => {
         await sendOrderConfirmationEmail(email);  
         
         // Gửi email thông báo đơn hàng mới đến Admin
-        const emailAdmin = 'dokhactu1822@gmail.com'
+        const emailAdmin = 'rabfenty@gmail.com'
         await sendOrderNotificationToAdmin(emailAdmin)
 
         // Cập nhật số lượng tồn kho và số lượng bán cho từng sản phẩm
