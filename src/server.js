@@ -13,6 +13,7 @@ const commentRouter = require('./routes/commentRouter');
 const hopQuaRouter = require('./routes/hopQuaRouter');
 const cauHoiRouter = require('./routes/cauHoiRouter');
 const thuegamelienhe = require('./routes/thuegamelienhe');
+const authRoutes = require('./routes/auth');
 const connectDB = require('./config/connectDB');
 const cors = require('cors');
 const multer = require('multer');
@@ -78,6 +79,7 @@ const routes = [
     { path: '/api/comment', router: commentRouter },
     { path: '/api/hopqua', router: hopQuaRouter },
     { path: '/api/cauhoi', router: cauHoiRouter },
+    { path: '/api/auth', router: authRoutes },
     // { path: '/api/lienhethuegame', router: thuegamelienhe },
 ];
   
