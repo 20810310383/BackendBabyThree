@@ -31,7 +31,7 @@ router.post('/google', async (req, res) => {
 
     // 3. Tạo JWT và lưu vào user.tokenAccess
     const token = jwt.sign(
-      { id: user._id, email },
+      { _id: user._id, email },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -43,7 +43,7 @@ router.post('/google', async (req, res) => {
       success: true,
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         email: user.email,
         fullName: user.fullName,
         image: user.image,
